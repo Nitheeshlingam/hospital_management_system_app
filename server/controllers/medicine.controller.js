@@ -1,4 +1,4 @@
-import Medicine from "../models/medicine.model.js";
+import Medicine from "../models/medicine.models.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 
 export const getAllMedicines = async (req, res) => {
