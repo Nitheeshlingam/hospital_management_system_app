@@ -7,6 +7,7 @@ import sequelize from "./config/db.js";
 import medicineRoutes from "./routes/medicine.route.js";
 import departmentRoutes from "./routes/department.route.js";
 import patientRoutes from "./routes/patient.route.js";
+import billingRoutes from "./routes/billing.route.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(logger);
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/patients", patientRoutes);
+app.use("/api/billings", billingRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hospital Management API is running...");
