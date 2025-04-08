@@ -117,8 +117,8 @@ export const getBillingRecordById = async (req, res) => {
 export const updateStatusOfBillingRecord = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fieldName, fieldValue } = req.body;
-    const updatedValues = { fieldName: fieldValue };
+    const { fieldValue } = req.body;
+    const updatedValues = { "status": fieldValue };
     const updatedBillingRecord = BillingRecords.update(updatedValues, {
       where: { id },
     });
@@ -184,7 +184,7 @@ export const getAllPaymentRecords = async (req, res) => {
 //Fetching Payment record by payment id
 export const getPaymentRecordId = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const paymentRecord = await Payment.findByPk(id);
     if (!paymentRecord) {
       return errorResponse(res, "No Payment Record found", 404);
@@ -199,8 +199,8 @@ export const getPaymentRecordId = async (req, res) => {
 export const updateStatusOfPaymentRecord = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fieldName, fieldValue } = req.body;
-    const updatedValues = { fieldName: fieldValue };
+    const { fieldValue } = req.body;
+    const updatedValues = { "status": fieldValue };
     const updatedPaymentRecord = Payment.update(updatedValues, {
       where: { id },
     });
