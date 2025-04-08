@@ -1,5 +1,4 @@
-import { where } from "sequelize";
-import { Billing, BillingRecords } from "../models/billing.models";
+import { Billing, BillingRecords, Payment } from "../models/billing.models";
 import { errorResponse, successResponse } from "../utils/response";
 
 //Creating a New Billing
@@ -114,7 +113,7 @@ export const getBillingRecordById = async (req, res) => {
   }
 };
 
-//Update the Status of Biiling Record
+//Update the Status of Billing Record
 export const updateStatusOfBillingRecord = async (req, res) => {
   try {
     const { id } = req.params;
@@ -130,6 +129,88 @@ export const updateStatusOfBillingRecord = async (req, res) => {
       res,
       "Successfully updated the status of the Billing Record",
       updatedBillingRecord
+    );
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error");
+  }
+};
+
+//Creating a New Payment
+export const createPayment = async (req, res) => {
+  try {
+    const {
+      patientid,
+      appointmentid,
+      paiddate,
+      paidtime,
+      paidamount,
+      status,
+      cardholder,
+      cardnumber,
+      cvvno,
+      expdate,
+    } = req.body;
+    await Payment.create(
+      patientid,
+      appointmentid,
+      paiddate,
+      paidtime,
+      paidamount,
+      status,
+      cardholder,
+      cardnumber,
+      cvvno,
+      expdate
+    );
+    return successResponse(res, "New Payment Record Created", null);
+  } catch (error) {
+    return errorResponse(res, error.message);
+  }
+};
+
+//Fetching All Payment Records
+export const getAllPaymentRecords = async (req, res) => {
+  try {
+    const payments = await Payment.findAll();
+    if (!payments) {
+      return errorResponse(res, "No Payment records found!");
+    }
+    return successResponse(res, "Payment records fetched", payments);
+  } catch (error) {
+    return errorResponse(res, error.message);
+  }
+};
+
+//Fetching Payment record by payment id
+export const getPaymentRecordId = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const paymentRecord = await Payment.findByPk(id);
+    if (!paymentRecord) {
+      return errorResponse(res, "No Payment Record found", 404);
+    }
+    return successResponse(res, "Payment Record found", paymentRecord);
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error");
+  }
+};
+
+//Update the Status of Payment Record
+export const updateStatusOfPaymentRecord = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fieldName, fieldValue } = req.body;
+    const updatedValues = { fieldName: fieldValue };
+    const updatedPaymentRecord = Payment.update(updatedValues, {
+      where: { id },
+    });
+    if (updatedPaymentRecord[0] == 0) {
+      return errorResponse(res, "Payment Record not found", 404);
+    }
+    return successResponse(
+      res,
+      "Successfully updated the status of the Payment Record",
+      updatedPaymentRecord
     );
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
