@@ -63,8 +63,8 @@ export const getDoctorDetails = async (req, res) => {
 export const updateDoctorStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fieldValue } = req.body;
-    const updatedValues = { status: fieldValue };
+    const { fieldName, fieldValue } = req.body;
+    const updatedValues = { fieldName: fieldValue };
     const updatedDoctorRecord = await Doctor.update(updatedValues, {
       where: { id },
     });

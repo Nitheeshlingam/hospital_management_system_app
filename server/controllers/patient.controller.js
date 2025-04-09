@@ -39,6 +39,18 @@ export const addUser = async (req, res) => {
     }    
 };
 
+export const getAllPatients = async (req, res) => {
+    try {
+        const patients = await Patient.findAll();
+        if (!patients) {
+            return errorResponse(res, "No patients found!", 404);
+        }
+        return successResponse(res, "Patients found", patients);
+    } catch (error) {
+        return errorResponse(res, error.message || "Internal Server Error");
+    }
+};
+
 export const findUserById = async (req, res) => {
     try {
         const { id } = req.params;

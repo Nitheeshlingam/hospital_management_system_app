@@ -15,7 +15,7 @@ export const createBill = async (req, res) => {
       discharge_time,
       discharge_date,
     } = req.body;
-    await Billing.create(
+    const bill = await Billing.create(
       patientid,
       appointmentid,
       billingdate,
@@ -26,7 +26,7 @@ export const createBill = async (req, res) => {
       discharge_time,
       discharge_date
     );
-    return successResponse(res, "New Bill is added", null);
+    return successResponse(res, "New Bill is added", bill);
   } catch (error) {
     return errorResponse(res, error.message);
   }
@@ -71,7 +71,7 @@ export const createBillingRecord = async (req, res) => {
       bill_date,
       status,
     } = req.body;
-    await BillingRecords.create(
+    const billingRecord = await BillingRecords.create(
       billingid,
       billing_type_id,
       bill_type,
@@ -79,7 +79,7 @@ export const createBillingRecord = async (req, res) => {
       bill_date,
       status
     );
-    return successResponse(res, "New bill record added", null);
+    return successResponse(res, "New bill record added", billingRecord);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
@@ -150,7 +150,7 @@ export const createPayment = async (req, res) => {
       cvvno,
       expdate,
     } = req.body;
-    await Payment.create(
+    const payment = await Payment.create(
       patientid,
       appointmentid,
       paiddate,
@@ -162,7 +162,7 @@ export const createPayment = async (req, res) => {
       cvvno,
       expdate
     );
-    return successResponse(res, "New Payment Record Created", null);
+    return successResponse(res, "New Payment Record Created", payment);
   } catch (error) {
     return errorResponse(res, error.message);
   }
