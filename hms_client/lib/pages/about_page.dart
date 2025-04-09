@@ -87,7 +87,7 @@ class _AboutPageState extends State<AboutPage> {
                               entry.value,
                               categoryColors[entry.key] ?? Color(0xFF2ECC71),
                             );
-                          }).toList(),
+                          }),
                           if (serviceIcons.length.isOdd) SizedBox(),
                         ],
                       ),

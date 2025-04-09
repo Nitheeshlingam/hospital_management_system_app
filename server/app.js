@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import logger from "./utils/logger.js";
 import sequelize from "./config/db.js";
 
@@ -13,8 +12,8 @@ import doctorRoutes from "./routes/doctor.route.js";
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
 app.use(logger);
+app.use(express.json());
 
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/departments", departmentRoutes);

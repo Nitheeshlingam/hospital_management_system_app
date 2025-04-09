@@ -7,7 +7,7 @@ import 'package:hms_client/widgets/custom_snackbar.dart';
 import 'package:hms_client/routes/routenames.dart';
 
 class ResetPasswordController extends StatefulWidget {
-  const ResetPasswordController({Key? key}) : super(key: key);
+  const ResetPasswordController({super.key});
 
   @override
   _ResetPasswordControllerState createState() =>

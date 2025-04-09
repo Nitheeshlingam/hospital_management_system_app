@@ -11,6 +11,8 @@ class ScheduleTable extends StatelessWidget {
     {'day': 'SUNDAY', 'time': '8.00 - 16.00'},
   ];
 
+  ScheduleTable({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,52 +32,46 @@ class ScheduleTable extends StatelessWidget {
       child: Column(
         children: [
           Table(
-            columnWidths: const {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(1),
-            },
-            children: schedule
-                .map(
-                  (item) => TableRow(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.white24, width: 1),
-                      ),
-                    ),
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Text(
-                          item['day']!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+            columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(1)},
+            children:
+                schedule
+                    .map(
+                      (item) => TableRow(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.white24, width: 1),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Text(
-                          item['time']!,
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Text(
+                              item['day']!,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                          textAlign: TextAlign.right,
-                        ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Text(
+                              item['time']!,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-                .toList(),
+                    )
+                    .toList(),
           ),
           SizedBox(height: 16),
-          Icon(
-            Icons.access_time_filled,
-            color: Colors.white30,
-            size: 60,
-          ),
+          Icon(Icons.access_time_filled, color: Colors.white30, size: 60),
         ],
       ),
     );

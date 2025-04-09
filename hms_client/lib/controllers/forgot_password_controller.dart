@@ -7,7 +7,7 @@ import 'package:hms_client/widgets/custom_snackbar.dart';
 import 'package:hms_client/routes/routenames.dart';
 
 class ForgotPasswordController extends StatefulWidget {
-  const ForgotPasswordController({Key? key}) : super(key: key);
+  const ForgotPasswordController({super.key});
 
   @override
   _ForgotPasswordControllerState createState() =>

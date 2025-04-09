@@ -1,7 +1,7 @@
-import { Billing, BillingRecords, Payment } from "../models/billing.models";
-import { errorResponse, successResponse } from "../utils/response";
+import { Billing, BillingRecords, Payment } from "../models/billing.models.js";
+import { errorResponse, successResponse } from "../utils/response.js";
 
-//Creating a New Billing
+// Create a new Billing
 export const createBill = async (req, res) => {
   try {
     const {
@@ -15,7 +15,22 @@ export const createBill = async (req, res) => {
       discharge_time,
       discharge_date,
     } = req.body;
-    const bill = await Billing.create(
+
+    if (
+      !patientid ||
+      !appointmentid ||
+      !billingdate ||
+      !billingtime ||
+      discount == null ||
+      taxamount == null ||
+      !discountreason ||
+      !discharge_time ||
+      !discharge_date
+    ) {
+      return errorResponse(res, "All billing fields are required", 400);
+    }
+
+    const bill = await Billing.create({
       patientid,
       appointmentid,
       billingdate,
@@ -24,15 +39,16 @@ export const createBill = async (req, res) => {
       taxamount,
       discountreason,
       discharge_time,
-      discharge_date
-    );
+      discharge_date,
+    });
+
     return successResponse(res, "New Bill is added", bill);
   } catch (error) {
     return errorResponse(res, error.message);
   }
 };
 
-//Fetching all the Billings
+// Get all Billings
 export const getAllBills = async (req, res) => {
   try {
     const bills = await Billing.findAll();
@@ -42,100 +58,102 @@ export const getAllBills = async (req, res) => {
   }
 };
 
-//Fetching a bill by Primary Key
+// Get Bill by ID
 export const getBillById = async (req, res) => {
   try {
     const { id } = req.params;
     const bill = await Billing.findByPk(id);
-    if (!bill) {
-      return errorResponse(res, "Bill not found", 404);
-    }
+    if (!bill) return errorResponse(res, "Bill not found", 404);
     return successResponse(res, "Bill found", bill);
   } catch (error) {
-    return errorResponse(
-      res,
-      error.message || "Internal Server Error",
-      error.statuscode
-    );
+    return errorResponse(res, error.message || "Internal Server Error");
   }
 };
 
-//Creating new Billing Records
+// Create a Billing Record
 export const createBillingRecord = async (req, res) => {
   try {
     const {
       billingid,
-      billing_type_id,
+      bill_type_id,
       bill_type,
       bill_amount,
       bill_date,
       status,
     } = req.body;
-    const billingRecord = await BillingRecords.create(
-      billingid,
-      billing_type_id,
+
+    if (
+      !billingid ||
+      !bill_type_id ||
+      !bill_type ||
+      bill_amount == null ||
+      !bill_date ||
+      !status
+    ) {
+      return errorResponse(res, "All billing record fields are required", 400);
+    }
+
+    const billingRecord = await BillingRecords.create({
+      billingid: parseInt(billingid),
+      bill_type_id: parseInt(bill_type_id),
       bill_type,
-      bill_amount,
+      bill_amount: parseFloat(bill_amount),
       bill_date,
-      status
-    );
+      status,
+    });
     return successResponse(res, "New bill record added", billingRecord);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
 
-//Fetching all Billing Records
+// Get all Billing Records
 export const getAllBillingRecords = async (req, res) => {
   try {
     const billingRecords = await BillingRecords.findAll();
+    console.log(billingRecords);
     return successResponse(res, "Fetched all Billing Records", billingRecords);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
 
-//Fetch a Billing Record by Id
+// Get Billing Record by ID
 export const getBillingRecordById = async (req, res) => {
   try {
     const { id } = req.params;
-    const billingRecords = await BillingRecords.findByPk(id);
-    if (!bill) {
+    const billingRecord = await BillingRecords.findByPk(id);
+    if (!billingRecord)
       return errorResponse(res, "Billing Record not found", 404);
-    }
-    return successResponse(res, "Billing Record found", billingRecords);
-  } catch (error) {
-    return errorResponse(
-      res,
-      error.message || "Internal Server Error",
-      error.statuscode
-    );
-  }
-};
-
-//Update the Status of Billing Record
-export const updateStatusOfBillingRecord = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { fieldValue } = req.body;
-    const updatedValues = { "status": fieldValue };
-    const updatedBillingRecord = BillingRecords.update(updatedValues, {
-      where: { id },
-    });
-    if (updatedBillingRecord[0] == 0) {
-      return errorResponse(res, "Billing Record not found", 404);
-    }
-    return successResponse(
-      res,
-      "Successfully updated the status of the Billing Record",
-      updatedBillingRecord
-    );
+    return successResponse(res, "Billing Record found", billingRecord);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
 
-//Creating a New Payment
+// Update Billing Record status
+export const updateStatusOfBillingRecord = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fieldValue } = req.body;
+
+    const updated = await BillingRecords.update(
+      { status: fieldValue },
+      {
+        where: { billingservice_id: parseInt(id) },
+      }
+    );
+
+    if (updated[0] === 0)
+      return errorResponse(res, "Billing Record not found", 404);
+
+    return successResponse(res, "Billing Record status updated", updated);
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error");
+  }
+};
+
+// Create Payment Record
 export const createPayment = async (req, res) => {
   try {
     const {
@@ -150,7 +168,23 @@ export const createPayment = async (req, res) => {
       cvvno,
       expdate,
     } = req.body;
-    const payment = await Payment.create(
+
+    if (
+      !patientid ||
+      !appointmentid ||
+      !paiddate ||
+      !paidtime ||
+      paidamount == null ||
+      !status ||
+      !cardholder ||
+      !cardnumber ||
+      !cvvno ||
+      !expdate
+    ) {
+      return errorResponse(res, "All payment fields are required", 400);
+    }
+
+    const payment = await Payment.create({
       patientid,
       appointmentid,
       paiddate,
@@ -160,58 +194,51 @@ export const createPayment = async (req, res) => {
       cardholder,
       cardnumber,
       cvvno,
-      expdate
-    );
-    return successResponse(res, "New Payment Record Created", payment);
+      expdate,
+    });
+
+    return successResponse(res, "Payment created", payment);
   } catch (error) {
     return errorResponse(res, error.message);
   }
 };
 
-//Fetching All Payment Records
+// Get all Payment Records
 export const getAllPaymentRecords = async (req, res) => {
   try {
     const payments = await Payment.findAll();
-    if (!payments) {
-      return errorResponse(res, "No Payment records found!");
-    }
     return successResponse(res, "Payment records fetched", payments);
   } catch (error) {
     return errorResponse(res, error.message);
   }
 };
 
-//Fetching Payment record by payment id
+// Get Payment Record by ID
 export const getPaymentRecordId = async (req, res) => {
   try {
     const { id } = req.params;
-    const paymentRecord = await Payment.findByPk(id);
-    if (!paymentRecord) {
-      return errorResponse(res, "No Payment Record found", 404);
-    }
-    return successResponse(res, "Payment Record found", paymentRecord);
+    const payment = await Payment.findByPk(id);
+    if (!payment) return errorResponse(res, "Payment Record not found", 404);
+    return successResponse(res, "Payment Record found", payment);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
 
-//Update the Status of Payment Record
+// Update Payment Record status
 export const updateStatusOfPaymentRecord = async (req, res) => {
   try {
     const { id } = req.params;
     const { fieldValue } = req.body;
-    const updatedValues = { "status": fieldValue };
-    const updatedPaymentRecord = Payment.update(updatedValues, {
-      where: { id },
-    });
-    if (updatedPaymentRecord[0] == 0) {
-      return errorResponse(res, "Payment Record not found", 404);
-    }
-    return successResponse(
-      res,
-      "Successfully updated the status of the Payment Record",
-      updatedPaymentRecord
+
+    const updated = await Payment.update(
+      { status: fieldValue },
+      { where: { paymentid: id } }
     );
+
+    if (updated[0] === 0)
+      return errorResponse(res, "Payment Record not found", 404);
+    return successResponse(res, "Payment Record status updated", updated);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }

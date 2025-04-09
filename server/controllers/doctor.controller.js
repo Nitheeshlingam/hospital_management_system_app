@@ -1,5 +1,5 @@
-import { Doctor } from "../models/user.models";
-import { errorResponse, successResponse } from "../utils/response";
+import { Doctor } from "../models/user.models.js";
+import { errorResponse, successResponse } from "../utils/response.js";
 
 //Create new Doctor
 export const createDoctor = async (req, res) => {
@@ -15,7 +15,7 @@ export const createDoctor = async (req, res) => {
       experience,
       consultancy_charge,
     } = req.body;
-    const doctor = await Doctor.create(
+    const doctor = await Doctor.create({
       doctorname,
       mobileno,
       departmentid,
@@ -24,8 +24,8 @@ export const createDoctor = async (req, res) => {
       status,
       education,
       experience,
-      consultancy_charge
-    );
+      consultancy_charge,
+    });
     return successResponse(res, "New Doctor created successfully", doctor);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
@@ -48,7 +48,7 @@ export const getAllDoctorDetails = async (req, res) => {
 //Fetch the doctor details by Doctor Id
 export const getDoctorDetails = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const doctor = await Doctor.findByPk(id);
     if (!doctor) {
       return errorResponse(res, "No Doctor found", 404);
@@ -64,14 +64,18 @@ export const updateDoctorStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { fieldName, fieldValue } = req.body;
-    const updatedValues = { fieldName: fieldValue };
+
+    const updatedValues = { [fieldName]: fieldValue };
+
     const updatedDoctorRecord = await Doctor.update(updatedValues, {
-      where: { id },
+      where: { doctorid: id }, // also make sure this matches your model's primary key
     });
+
     if (updatedDoctorRecord[0] === 0) {
       return errorResponse(res, "No Doctor found", 404);
     }
-    return successResponse(res, "Doctor Status Updated", updateDoctorStatus);
+
+    return successResponse(res, "Doctor Status Updated", updatedDoctorRecord);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }

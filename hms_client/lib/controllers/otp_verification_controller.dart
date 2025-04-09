@@ -8,8 +8,7 @@ import 'package:hms_client/routes/routenames.dart';
 import 'dart:async';
 
 class OTPVerificationController extends StatefulWidget {
-  const OTPVerificationController({Key? key, required this.input})
-    : super(key: key);
+  const OTPVerificationController({super.key, required this.input});
 
   final String input;
 
