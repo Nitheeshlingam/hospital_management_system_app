@@ -1,6 +1,46 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
+const User = sequelize.define(
+  "User",
+  {
+    userid: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    loginname: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    patientname: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    mobileno: {
+      type: DataTypes.STRING(15),
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    createddateandtime: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: "user",
+    timestamps: false,
+  }
+);
+
 const Admin = sequelize.define(
   "Admin",
   {
@@ -88,49 +128,6 @@ const Doctor = sequelize.define(
   }
 );
 
-const User = sequelize.define(
-  "User",
-  {
-    userId: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    loginName: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING(255), // For hashed passwords
-      allowNull: false,
-    },
-    patientName: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    mobileNo: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      validate: {
-        isEmail: true, // Ensures valid email format
-      },
-    },
-    createdDateTime: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-  },
-  {
-    tableName: "user",
-    timestamps: false,
-  }
-);
-
 const Patient = sequelize.define(
   "Patient",
   {
@@ -139,15 +136,15 @@ const Patient = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    patientName: {
+    patientname: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    admissionDate: {
+    admissiondate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    admissionTime: {
+    admissiontime: {
       type: DataTypes.TIME,
       allowNull: false,
     },
@@ -155,7 +152,7 @@ const Patient = sequelize.define(
       type: DataTypes.STRING(250),
       allowNull: false,
     },
-    mobileNo: {
+    mobileno: {
       type: DataTypes.STRING(15),
       allowNull: false,
     },
@@ -167,16 +164,15 @@ const Patient = sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    loginId: {
+    loginid: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
     },
     password: {
       type: DataTypes.STRING(25),
       allowNull: false,
     },
-    bloodGroup: {
+    bloodgroup: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
@@ -199,6 +195,4 @@ const Patient = sequelize.define(
   }
 );
 
-export default Patient;
-
-export { User, Doctor, Admin, Patient };
+export { User, Admin, Doctor, Patient };

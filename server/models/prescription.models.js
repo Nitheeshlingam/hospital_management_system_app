@@ -9,7 +9,7 @@ const Prescription = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    treatmentRecordsId: {
+    treatment_records_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -33,15 +33,15 @@ const Prescription = sequelize.define(
         key: "userid",
       },
     },
-    deliveryType: {
+    delivery_type: {
       type: DataTypes.STRING(10),
       allowNull: false,
     },
-    deliveryId: {
+    delivery_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    prescriptionDate: {
+    prescriptiondate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
@@ -59,12 +59,12 @@ const Prescription = sequelize.define(
 const PrescriptionRecords = sequelize.define(
   "PrescriptionRecords",
   {
-    prescriptionRecordId: {
+    prescription_record_id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    prescriptionId: {
+    prescription_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -72,7 +72,7 @@ const PrescriptionRecords = sequelize.define(
         key: "prescriptionid",
       },
     },
-    medicineName: {
+    medicine_name: {
       type: DataTypes.STRING(25),
       allowNull: false,
     },
@@ -99,46 +99,31 @@ const PrescriptionRecords = sequelize.define(
   }
 );
 
-Prescription.hasMany(PrescriptionRecords, { foreignKey: "prescriptionId" });
-PrescriptionRecords.belongsTo(Prescription, { foreignKey: "prescriptionId" });
-
 const Orders = sequelize.define(
   "Orders",
   {
-    orderId: {
+    orderid: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    patientId: {
+    patientid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "user",
-        key: "userid",
-      },
     },
-    doctorId: {
+    doctorid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "user",
-        key: "userid",
-      },
     },
-    prescriptionId: {
+    prescriptionid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: Prescription,
-        key: "prescriptionid",
-      },
     },
-    orderDate: {
+    orderdate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    deliveryDate: {
+    deliverydate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
@@ -146,7 +131,7 @@ const Orders = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    mobileNo: {
+    mobileno: {
       type: DataTypes.STRING(15),
       allowNull: false,
     },
@@ -158,23 +143,23 @@ const Orders = sequelize.define(
       type: DataTypes.STRING(10),
       allowNull: false,
     },
-    paymentType: {
+    payment_type: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    cardNo: {
+    card_no: {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
-    cvvNo: {
+    cvv_no: {
       type: DataTypes.STRING(5),
       allowNull: false,
     },
-    expDate: {
+    expdate: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    cardHolder: {
+    card_holder: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },

@@ -63,14 +63,11 @@ const BillingRecords = sequelize.define(
     billingid: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: Billing,
-        key: "billingid",
-      },
     },
     bill_type_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      comment: "id of service charge or treatment charge",
     },
     bill_type: {
       type: DataTypes.STRING(250),
@@ -94,9 +91,6 @@ const BillingRecords = sequelize.define(
     timestamps: false,
   }
 );
-
-Billing.hasMany(BillingRecords, { foreignKey: "billingid" });
-BillingRecords.belongsTo(Billing, { foreignKey: "billingid" });
 
 const Payment = sequelize.define(
   "Payment",
@@ -135,11 +129,11 @@ const Payment = sequelize.define(
       allowNull: false,
     },
     cardnumber: {
-      type: DataTypes.STRING(25),
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
     cvvno: {
-      type: DataTypes.STRING(5),
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     expdate: {
