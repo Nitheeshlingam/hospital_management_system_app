@@ -8,6 +8,8 @@ import departmentRoutes from "./routes/department.route.js";
 import patientRoutes from "./routes/patient.route.js";
 import billingRoutes from "./routes/billing.route.js";
 import doctorRoutes from "./routes/doctor.route.js";
+import userRoutes from "./routes/user.route.js";
+import adminRoutes from "./routes/admin.route.js";
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.use("/api/departments", departmentRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/billings", billingRoutes);
 app.use("/api/doctors", doctorRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/admins", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hospital Management API is running...");
