@@ -10,6 +10,7 @@ import billingRoutes from "./routes/billing.route.js";
 import doctorRoutes from "./routes/doctor.route.js";
 import userRoutes from "./routes/user.route.js";
 import adminRoutes from "./routes/admin.route.js";
+import prescriptionRoutes from "./routes/prescription.route.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/departments", departmentRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/billings", billingRoutes);
 app.use("/api/doctors", doctorRoutes);
+app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admins", adminRoutes);
 

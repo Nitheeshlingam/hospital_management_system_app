@@ -15,7 +15,7 @@ export const createDoctor = async (req, res) => {
       experience,
       consultancy_charge,
     } = req.body;
-    const doctor = await Doctor.create(
+    const doctor = await Doctor.create({
       doctorname,
       mobileno,
       departmentid,
@@ -25,7 +25,7 @@ export const createDoctor = async (req, res) => {
       education,
       experience,
       consultancy_charge
-    );
+    });
     return successResponse(res, "New Doctor created successfully", doctor);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
