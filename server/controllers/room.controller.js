@@ -73,20 +73,40 @@ export const updateTheRoomField = async (req, res) => {
   try {
     const { id } = req.params;
     const { fieldName, fieldValue } = req.body;
-    const updatedValue = {};
-    updatedValue[fieldName] = fieldValue;
+
+    // First check if room exists
+    const room = await Room.findByPk(id);
+    if (!room) {
+      return errorResponse(res, "Room not found", 404);
+    }
+
+    // Validate if fieldName is a valid column in Room model
+    const validFields = [
+      "roomtype",
+      "roomno",
+      "noofbeds",
+      "room_tariff",
+      "status",
+    ];
+    if (!validFields.includes(fieldName)) {
+      return errorResponse(res, "Invalid field name", 400);
+    }
+
+    const updatedValue = {
+      [fieldName]: fieldValue,
+    };
+
     const updatedRoomField = await Room.update(updatedValue, {
       where: { roomid: id },
+      returning: true, // This will return the updated record
     });
-    if (updatedRoomField[0] === 0) {
-      return errorResponse(res, "No room found", 404);
-    }
-    return successResponse(
-      res,
-      "Room Field updated successfully",
-      updatedRoomField
-    );
+
+    // Fetch the updated room to return in response
+    const updatedRoom = await Room.findByPk(id);
+
+    return successResponse(res, "Room Field updated successfully", updatedRoom);
   } catch (error) {
+    console.error("Error updating room field:", error);
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };

@@ -23,9 +23,13 @@ export const getAllServiceTypes = async (req, res) => {
   try {
     const serviceTypes = await ServiceType.findAll();
     if (!serviceTypes) {
-        return errorResponse(res, "No Service Types found", 404);
+      return errorResponse(res, "No Service Types found", 404);
     }
-    return successResponse(res, "Fetched all Service Type records", serviceTypes);
+    return successResponse(
+      res,
+      "Fetched all Service Type records",
+      serviceTypes
+    );
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
@@ -37,7 +41,7 @@ export const getServiceTypeById = async (req, res) => {
     const { id } = req.params;
     const serviceType = await ServiceType.findByPk(id);
     if (!serviceType) {
-        return errorResponse(res, "No Service Type found", 404);
+      return errorResponse(res, "No Service Type found", 404);
     }
     return successResponse(res, "Service Type record found", serviceType);
   } catch (error) {
@@ -50,14 +54,25 @@ export const updateServiceTypeStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const updatedValue = {};
-    updatedValue["status"] = status;
-    const updatedServiceTypeRecord = await ServiceType.update(updatedValue, { where: { service_type_id: id } });
-    if (updatedServiceTypeRecord[0] === 0) {
-        return errorResponse(res, "No Service Type Record found", 404);
+
+    // First check if service exists
+    const serviceType = await ServiceType.findByPk(id);
+    if (!serviceType) {
+      return errorResponse(res, "Service Type not found", 404);
     }
-    return successResponse(res, "Updated the Service Type Status Successfully", updatedServiceTypeRecord);
+
+    await ServiceType.update({ status }, { where: { service_type_id: id } });
+
+    // Fetch the updated record
+    const updatedService = await ServiceType.findByPk(id);
+
+    return successResponse(
+      res,
+      "Service Type status updated successfully",
+      updatedService
+    );
   } catch (error) {
+    console.error("Error updating service type status:", error);
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
@@ -66,15 +81,55 @@ export const updateServiceTypeStatus = async (req, res) => {
 export const updateServiceTypeField = async (req, res) => {
   try {
     const { id } = req.params;
-    const { fieldName, fieldValue } = req.body;
-    const updatedValue = {};
-    updatedValue[fieldName] = fieldValue;
-    const updatedServiceTypeRecord = await ServiceType.update(updatedValue, { where: { service_type_id: id } });
-    if (updatedServiceTypeRecord[0] === 0) {
-        return errorResponse(res, "No Service Type Record found", 404);
+
+    // First check if service exists
+    const serviceType = await ServiceType.findByPk(id);
+    if (!serviceType) {
+      return errorResponse(res, "Service Type not found", 404);
     }
-    return successResponse(res, "Updated the Service Type Status Successfully", updatedServiceTypeRecord);
+
+    // Handle both single field update and full object update
+    let updateData;
+    if (req.body.fieldName && req.body.fieldValue) {
+      // Single field update
+      const { fieldName, fieldValue } = req.body;
+      // Validate field name
+      const validFields = [
+        "service_type",
+        "servicecharge",
+        "description",
+        "status",
+      ];
+      if (!validFields.includes(fieldName)) {
+        return errorResponse(res, "Invalid field name", 400);
+      }
+      updateData = { [fieldName]: fieldValue };
+    } else {
+      // Full object update
+      const { service_type, servicecharge, description, status } = req.body;
+      updateData = {
+        ...(service_type && { service_type }),
+        ...(servicecharge && { servicecharge }),
+        ...(description && { description }),
+        ...(status && { status }),
+      };
+    }
+
+    // Perform the update
+    await ServiceType.update(updateData, {
+      where: { service_type_id: id },
+    });
+
+    // Fetch the updated record
+    const updatedService = await ServiceType.findByPk(id);
+
+    return successResponse(
+      res,
+      "Service Type updated successfully",
+      updatedService
+    );
   } catch (error) {
+    console.error("Error updating service type:", error);
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
