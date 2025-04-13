@@ -88,3 +88,38 @@ export const updateField = async (req, res) => {
     return errorResponse(res, error.message);
   }
 };
+
+// Login Patient
+export const loginPatient = async (req, res) => {
+  try {
+    const { loginid, password } = req.body;
+    const patient = Patient.findOne({
+      where: {
+        loginid: loginid,
+        password: password
+      }
+    });
+    if (!patient) {
+      return errorResponse(res, "No Patient found", 404);
+    }
+    const patientData = {
+      patientid: patient.patientid,
+      patientname: patient.patientname,
+      admissiondate: patient.admissiondate,
+      admissiontime: patient.admissiontime,
+      address: patient.address,
+      mobileno: patient.mobileno,
+      city: patient.city,
+      pincode: patient.pincode,
+      loginid: loginid,
+      password: password,
+      bloodgroup: patient.bloodgroup,
+      gender: patient.gender,
+      dob: patient.dob,
+      status: patient.status
+    };
+    return successResponse(res, "Patient found and login successful", patientData);
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error");
+  }
+};

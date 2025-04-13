@@ -3,6 +3,7 @@ import {
   createDoctor,
   getAllDoctorDetails,
   getDoctorDetails,
+  loginDoctor,
   updateDoctorStatus,
 } from "../controllers/doctor.controller.js";
 
@@ -12,5 +13,6 @@ router.post("/", createDoctor);
 router.get("/", getAllDoctorDetails);
 router.get("/:id", getDoctorDetails);
 router.put("/:id", updateDoctorStatus);
+router.post("/login", loginDoctor);
 
 export default router;

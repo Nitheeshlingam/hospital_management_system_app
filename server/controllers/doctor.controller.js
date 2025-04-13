@@ -76,3 +76,34 @@ export const updateDoctorStatus = async (req, res) => {
     return errorResponse(res, error.message || "Internal Server Error");
   }
 };
+
+// Login Doctor
+export const loginDoctor = async (req, res) => {
+  try {
+    const { loginid, password } = req.body;
+    const doctor = Doctor.findOne({
+      where: {
+        loginid: loginid,
+        password: password
+      }
+    });
+    if (!doctor) {
+      return errorResponse(res, "No Doctor found", 404);
+    }
+    const doctorData = {
+      doctorid: doctor.doctorid,
+      doctorname: doctor.doctorname,
+      mobileno: doctor.mobileno,
+      departmentid: doctor.departmentid,
+      loginid: loginid,
+      password: password,
+      status: doctor.status,
+      education: doctor.education,
+      experience: doctor.experience,
+      consultancyCharge: doctor.consultancy_charge
+    };
+    return successResponse(res, "Doctor found and login successful", doctorData);
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error");
+  }
+};
