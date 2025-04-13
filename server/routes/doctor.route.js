@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createDoctor,
+  deleteDoctor,
   getAllDoctorDetails,
   getDoctorDetails,
   loginDoctor,
@@ -14,5 +15,6 @@ router.get("/", getAllDoctorDetails);
 router.get("/:id", getDoctorDetails);
 router.put("/:id", updateDoctorStatus);
 router.post("/login", loginDoctor);
+router.delete("/:id", deleteDoctor);
 
 export default router;

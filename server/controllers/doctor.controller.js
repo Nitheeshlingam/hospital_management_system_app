@@ -64,7 +64,8 @@ export const updateDoctorStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { fieldName, fieldValue } = req.body;
-    const updatedValues = { fieldName: fieldValue };
+    const updatedValues = {};
+    updatedValues[fieldName] = fieldValue;
     const updatedDoctorRecord = await Doctor.update(updatedValues, {
       where: { id },
     });
@@ -103,6 +104,17 @@ export const loginDoctor = async (req, res) => {
       consultancyCharge: doctor.consultancy_charge
     };
     return successResponse(res, "Doctor found and login successful", doctorData);
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error");
+  }
+};
+
+// Delete a Doctor
+export const deleteDoctor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Doctor.destroy({ where: { doctorid: id } });
+    return successResponse(res, "Successfully Deleted Doctor", null);
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error");
   }
