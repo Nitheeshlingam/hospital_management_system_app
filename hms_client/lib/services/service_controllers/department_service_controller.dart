@@ -57,7 +57,7 @@ class DepartmentServiceController {
   // Update the Department
   Future<void> updateDepartment(int id, Map<String, dynamic> data) async {
     try {
-      Response response = await dio.post(
+      Response response = await dio.put(
         "/:id",
         data: data,
         queryParameters: {"id": id},
